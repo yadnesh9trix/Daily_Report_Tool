@@ -42,10 +42,10 @@ def mapping_type(mappath):
 
 
 ##======================================================================================================================
-def zonegatwise_TDdailyreport(infile,mappath,outpath,zonemap,mailreport,tdsheetname,ytdsheetname):
-    tddata = pd.read_excel(infile, sheet_name=ytdsheetname)
+def zonegatwise_TDdailyreport(infile,mappath,outpath,zonemap,mailreport):
+    tddata = pd.read_excel(infile)
+    tddata = tddata[tddata['receiptdate'] == '2023-03-31']
     tddata['receiptdate'] = pd.to_datetime(tddata['receiptdate']).dt.date
-    tddata = tddata[tddata['receiptdate'] == today]
     # tddata = pd.read_excel(infile, sheet_name=tdsheetname)
     #-------------------------------------------------------------------------------------------------------------------
     grpbytot = tddata.groupby(['ezname', 'gatname']).agg({'paidamount': 'sum'}).reset_index()
@@ -86,7 +86,7 @@ def zonegatwise_TDdailyreport(infile,mappath,outpath,zonemap,mailreport,tdsheetn
     return final_df_TD,df_TD
 
 ##======================================================================================================================
-def totaltax_collectionreport(std_path,infile,mappath,msterdatapath_,zonemap,TDCollection,mailreport,ytdsheetname):
+def totaltax_collectionreport(std_path,infile,mappath,msterdatapath_,zonemap,TDCollection,mailreport):
     # Read ColumN naming mapping & stdandard report values
     namemap = pd.read_excel(mappath + "naming_map.xlsx")
     ytdreport_stdvalue = pd.read_excel(mappath + "reportformat.xlsx")
@@ -116,7 +116,7 @@ def totaltax_collectionreport(std_path,infile,mappath,msterdatapath_,zonemap,TDC
 ###---------------------------------------------------------------------------------------------------------------------
     # Read YTD data
     # ytddata = pd.read_excel(infile, sheet_name="Total")
-    ytddata = pd.read_excel(infile, sheet_name=ytdsheetname)
+    ytddata = pd.read_excel(infile)
     ytddata['eng_zone'] = ytddata['ezname'].map(zonemap)
     sumgrpby = ytddata.groupby(['ezname', 'eng_zone']).agg({'magil': 'sum', 'chalu': 'sum'}).reset_index()
     sumgrpby['sum_of_magil_in_cr'] = round(sumgrpby['magil'] / 10000000, 2)
@@ -258,72 +258,3 @@ def totaltax_collectionreport(std_path,infile,mappath,msterdatapath_,zonemap,TDC
     final_df_YTD = report_ytd.rename(columns=colmap_em)
     ###-----------------------------------------------------------------------------------------------------------------
     return final_df_YTD,str_tomw
-
-
-
-# def dailyreport(inppath,zonemap,outpath):
-#     ####==========================================================================================================================
-#     ytddata = pd.read_excel(inppath + "Paidamount_list.xlsx", sheet_name="Total")
-#     # zz = dict(zip(zonetype['zonename'], zonetype['eng_zonename']))
-#     ytddata['eng_zone'] = ytddata['ezname'].map(zonemap)
-#     sumgrpby = ytddata.groupby(['ezname', 'eng_zone']).agg({'magil': 'sum', 'chalu': 'sum'}).reset_index()
-#     sumgrpby['sum_of_magil_in_cr'] = sumgrpby['magil'] / 10000000
-#     sumgrpby['sum_of_chalu_in_cr'] = sumgrpby['chalu'] / 10000000
-#     lissy = ['Nigdi Pradhikaran','Akurdi','Chinchwad','Thergaon','Sangvi','Pimpri Waghere',
-#              'Pimpri Nagar','MNP Bhavan','Fugewadi Dapodi','Bhosari','Charholi',
-#              'Moshi','Chikhali','Talvade','Kivle','Dighi Bopkhel','Wakad']
-#
-#     d = {v: k for k, v in enumerate(lissy)}
-#     df_YTD = sumgrpby.sort_values('eng_zone', key=lambda x: x.map(d), ignore_index=True)
-#     df_YTD.to_excel(outpath + "YTD_TodalTax_collection.xlsx",index=False)
-#
-#     ####==========================================================================================================================
-#     ###
-#     tddata = pd.read_excel(inppath + "Paidamount_list.xlsx", sheet_name="Today")
-#     grpbytot = tddata.groupby(['ezname', 'gatname']).agg({'paidamount': 'sum'}).reset_index()
-#     grpbytot['eng_zone'] = grpbytot['ezname'].map(zonemap)
-#     # aaaa = grpbytot.melt(id_vars=['ezname', 'gatname','eng_zone'], var_name='groubysum', value_name='paidamount')
-#     pvotable = grpbytot.pivot_table(index=['eng_zone', 'ezname'], columns='gatname', values='paidamount')
-#     pp = pvotable.reset_index()
-#
-#     lissy = ['Nigdi Pradhikaran','Akurdi','Chinchwad','Thergaon','Sangvi','Pimpri Waghere',
-#              'Pimpri Nagar','MNP Bhavan','Fugewadi Dapodi','Bhosari','Charholi',
-#              'Moshi','Chikhali','Talvade','Kivle','Dighi Bopkhel','Wakad']
-#
-#     d = {v: k for k, v in enumerate(lissy)}
-#     df_TD = pp.sort_values('eng_zone', key=lambda x: x.map(d), ignore_index=True)
-#     df_TD.to_excel(outpath + "TD_GatZoneWiseTax_Collection.xlsx",index=False)
-#
-#     return df_TD,df_YTD
-
-
-# if __name__ == '__main__':
-#     std_path= r"C:\PTAX Project\PTAx\Manual Daily Report/"
-#     inppath = std_path + "Input/" + str(today) + "/"
-#     outpth = std_path + "Output/" + str(today) + "/"
-#     if os.path.exists(outpth):
-#         pass
-#     else:
-#         os.mkdir(outpth)
-#
-#     mappath = std_path + "Mapping/"
-#
-#     zonemap, usemap, construcmap, occpmap, subusemap, gatnamemap =  mapping_type(mappath)
-#
-#     df_TD, df_YTD = dailyreport(inppath,zonemap,outpth)
-
-    # df_TD.to_excel(outpath + "TD_GatZoneWiseTax_Collection.xlsx", index=False)
-    # td = today.strftime("%d-%b-%Y")
-    # text_body = f"पिंपरी चिंचवड महानगरपालिका, पिंपरी - 411 018" \
-    #             f"\r\n\r\n" \
-    #             f"कर आकारणी व कर संकलन विभाग" \
-    #             f"\r\n\r\n" \
-    #             f"दिनांक {td} रोजीचा गट निहाय वसूली तक्ता"
-    # ggg = pd.DataFrame([text_body])
-    # std_path = r"C:\PTAX Project\PTAx\Manual Daily Report/"
-    # outpth = std_path + "Output/"
-    # writer = pd.ExcelWriter(outpth + "/" + f"test.xlsx", engine="xlsxwriter")
-    # ggg.to_excel(writer, index=False, startcol=10)
-    #
-    # writer.save()
-    # writer.close()

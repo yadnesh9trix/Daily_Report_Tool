@@ -172,7 +172,6 @@ def excelwriter(outpth,logopath,TDCollection, YTD_RecoveryCollection,str_tomw):
     #       "---------------------------------------------------------------------------------------------------")
 ##==============================================================================================================================================
 
-
     # worksheet_ytd.merge_range('E6:G6',"एकूण मागणी",cell_format1)
     # worksheet_ytd.merge_range('H6:J6',"अवैध बांधकाम शास्ती",cell_format1)
     # worksheet_ytd.merge_range('K6:M6',"फुगीर मागणी",cell_format1)

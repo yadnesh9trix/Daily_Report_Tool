@@ -18,11 +18,11 @@ yesterday = today - timedelta(days=1)
 #-----------------------------------------------------------------------------------------------------------------------
 def report_trigger(std_path,in_path,outpth,mappath,logopath,mailreport):
 
-    global tdsheetname, ytdsheetname
-
-    def get_sheetnames_xlsx(filepath):
-        wb = load_workbook(filepath, read_only=True, keep_links=False)
-        return wb.sheetnames
+    # global tdsheetname, ytdsheetname
+    #
+    # def get_sheetnames_xlsx(filepath):
+    #     wb = load_workbook(filepath, read_only=True, keep_links=False)
+    #     return wb.sheetnames
 
     if os.path.isdir(in_path):
         files = os.listdir(in_path)
@@ -30,21 +30,21 @@ def report_trigger(std_path,in_path,outpth,mappath,logopath,mailreport):
             fil = files[0].lower()
             if (fil.__contains__("list")) | (fil.__contains__("amount")):
                 infile = in_path + "/" + files[0]
-                sheetname = get_sheetnames_xlsx(infile)
-                for x in sheetname:
-                    if (len(x) >= 20) | (x == str(today)) | (x == 'Total') :
-                        ytdsheetname = x
-                        tdsheetname  =None
-                    # elif len(x) >= 8 | (x==str(today)):
-                    elif x == str(today):
-                        tdsheetname = x
-                    else:
-                        pass
+                # sheetname = get_sheetnames_xlsx(infile)
+                # for x in sheetname:
+                #     if (len(x) >= 20) | (x == str(today)) | (x == 'Total') :
+                #         ytdsheetname = x
+                #         tdsheetname  =None
+                #     # elif len(x) >= 8 | (x==str(today)):
+                #     elif x == str(today):
+                #         tdsheetname = x
+                #     else:
+                #         pass
                 zonemap,usemap,construcmap,occpmap,subusemap,gatnamemap,msterdatapath_ = drp.mapping_type(mappath)
-                TDCollection,tdreport = drp.zonegatwise_TDdailyreport(infile,mappath,outpth,zonemap,mailreport,tdsheetname,ytdsheetname)
+                TDCollection,tdreport = drp.zonegatwise_TDdailyreport(infile,mappath,outpth,zonemap,mailreport)
 
                 YTD_RecoveryCollection,str_tomw  = drp.totaltax_collectionreport(std_path,infile,mappath,msterdatapath_,
-                                                                                 zonemap,tdreport,mailreport,ytdsheetname)
+                                                                                 zonemap,tdreport,mailreport)
                 # YTD_RecoveryCollection = pd.DataFrame()
                 if os.path.isdir(outpth):
                     print("Already Present Today's Date Folder")
@@ -57,7 +57,6 @@ def report_trigger(std_path,in_path,outpth,mappath,logopath,mailreport):
             print("Data Not found")
     else:
         print("({})'s data folder not found".format(today))
-
 #-----------------------------------------------------------------------------------------------------------------------
 
 if __name__ == '__main__':
