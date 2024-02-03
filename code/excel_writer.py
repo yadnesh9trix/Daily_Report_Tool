@@ -10,7 +10,7 @@ today = datetime.datetime.today().date()
 tday  =today.strftime("%d/%m/%Y")
 
 
-def excelwriter(outpth,logopath,TDCollection, YTD_RecoveryCollection,str_tomw):
+def excelwriter(outpth,logopath,TDCollection,YTD_RecoveryCollection,str_tomw):
     ###==================================================================================================================
     writer = pd.ExcelWriter(outpth + f"PCMC_PTAX_CollectionReport_{str(today)}.xlsx", engine="xlsxwriter")
 

@@ -5,7 +5,6 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
-
 import numpy as np
 import pandas as pd
 import csv
@@ -13,11 +12,10 @@ from tabulate import tabulate
 
 today = datetime.datetime.today()
 
-
 def send():
     # creates SMTP session
     # text, pickup_df, segment_pickup_df_updated = summary(hf_df, ms_df, date)
-    eid_data = pd.read_excel("C:\PTAX Project\Daily_Report_Tool\Mapping\mail_mapping/send_email.xlsx")
+    eid_data = pd.read_excel("D:\Daily_Report_Tool\Mapping\mail_mapping/send_email_TESt.xlsx")
     eid_h_to = eid_data['emailid'][eid_data['type'] == 1]
     eid_h_cc = eid_data['emailid'][eid_data['type'] == 2]
 
@@ -133,7 +131,11 @@ def send():
     mailreport = std_path + "Mail_report/"
     # mailreport = std_path + "Mail_report/"
 
-    data = pd.read_csv(mailreport+f"{today.date()}_collectiondata.csv",encoding='utf-8-sig')
+    try:
+        data = pd.read_csv(mailreport+f"{today.date()}_collectiondata.csv",encoding='utf-8-sig')
+    except:
+        data =pd.DataFrame()
+
     data = data.replace(np.nan,"")
     text = text_body.format(table=tabulate(data, headers="firstrow", tablefmt="grid"))
     # html = html.format(table=tabulate(data,headers=['अ.क्र.', 'विभागीय कार्यालय', 'वसूली'], tablefmt="html",showindex=False))

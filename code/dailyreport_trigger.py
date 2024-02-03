@@ -13,7 +13,7 @@ from datetime import timedelta
 # Defined todays date folder
 today = datetime.datetime.today().date()
 tday  = today.strftime("%d_%b_%Y")
-yesterday = today - timedelta(days=1)
+yesterday = today - timedelta(days=0)
 
 #-----------------------------------------------------------------------------------------------------------------------
 def report_trigger(std_path,in_path,outpth,mappath,logopath,mailreport):
